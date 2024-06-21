@@ -17,13 +17,13 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api/v1/testing'], function() use ($router){
-    $router->get('/', ['uses' => 'UserController@index']);
-	$router->post('/', ['uses' => 'UserController@create ']);
-	$router->get('/{id}', ['uses' => 'UserController@show']);
-	$router->delete('/{id}', ['uses' => 'UserController@destroy']);
-	$router->put('/{id}', ['uses' => 'UserController@update']);
-});
+// $router->group(['prefix' => 'api/v1/testing'], function() use ($router){
+//     $router->get('/', ['uses' => 'UserController@index']);
+// 	$router->post('/', ['uses' => 'UserController@create ']);
+// 	$router->get('/{id}', ['uses' => 'UserController@show']);
+// 	$router->delete('/{id}', ['uses' => 'UserController@destroy']);
+// 	$router->put('/{id}', ['uses' => 'UserController@update']);
+// });
 
 $router->group(['prefix' => 'api/v1/testing','middleware' => 'auth'], function() use ($router){
     $router->get('/', ['uses' => 'UserController@index']);
@@ -32,5 +32,7 @@ $router->group(['prefix' => 'api/v1/testing','middleware' => 'auth'], function()
 $router->group(['prefix' => 'api/v1/product','middleware' => 'auth'], function() use ($router){
     $router->get('/', ['uses' => 'ProductController@index']);
     $router->post('/add', ['uses' => 'ProductController@store']);
-    $router->get('/show/{id}', ['uses' => 'ProductController@show']);
+    $router->get('/{id}', ['uses' => 'ProductController@show']);
+    $router->delete('/{id}', ['uses' => 'ProductController@destroy']);
+    $router->put('/{id}', ['uses' => 'ProductController@update']);
 });

@@ -89,7 +89,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        
     }
 
     /**
@@ -99,9 +99,35 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string'
+        ]);
+
+        $product = DB::connection('mysql')->table('products')->where('id', $id)->first();
+
+        $responsfalse = [
+            'success' => false,
+            'message' => 'product notfounded',
+        ];
+        if(is_null($product)){
+            return response()->json($responsfalse, 404);
+        } else {
+            $dataproduct = [
+                'name' => $request->input(['name']),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ];
+            $product = DB::connection('mysql')->table('products')->update($dataproduct);
+            $dataupdate = DB::connection('mysql')->table('products')->where('id', $id)->first();
+            $responstrue = [
+                'success' => true,
+                'message' => 'product founded',
+                'data' => $dataupdate
+            ];
+            return response()->json($responstrue, 201);
+        }
     }
 
     /**
@@ -110,8 +136,23 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        $product = DB::connection('mysql')->table('products')->where('id', $id)->first();
+        $responstrue = [
+            'success' => true,
+            'message' => 'product success delete',
+        ];
+
+        $responsfalse = [
+            'success' => false,
+            'message' => 'product notfounded',
+        ];
+        if(is_null($product)){
+            return response()->json($responsfalse, 404);
+        } else {
+            DB::connection('mysql')->table('products')->where('id', $id)->delete();
+            return response()->json($responstrue, 201);
+        }
     }
 }
