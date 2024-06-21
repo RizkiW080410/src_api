@@ -42,13 +42,17 @@ class ProductController extends Controller
             'name' => 'required|string'
         ]);
 
-        $product = DB::connection('mysql')->table('products')->insert([
+        $dataproduct = [
             'name' => $request['name'],
             'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+            'updated_at' => Carbon::now()
+        ];
 
-        return response()->json(['success' => true, 'message' => 'product created successfully ' . $request->name], 201);
+        $product = DB::connection('mysql')->table('products')->insertGetId($dataproduct);
+
+        $data = DB::connection('mysql')->table('products')->where('id', $product)->first();
+
+        return response()->json(['success' => true, 'message' => 'product created successfully ' . $request->name, 'product' => $data], 201);
     }
 
     /**
@@ -57,9 +61,24 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $product = DB::connection('mysql')->table('products')->where('id', $id)->first();
+        $responstrue = [
+            'success' => true,
+            'message' => 'product founded',
+            'data' => $product
+        ];
+
+        $responsfalse = [
+            'success' => false,
+            'message' => 'product notfounded',
+        ];
+        if(is_null($product)){
+            return response()->json($responsfalse, 404);
+        } else {
+            return response()->json($responstrue, 201);
+        }
     }
 
     /**
