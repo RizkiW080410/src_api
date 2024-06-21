@@ -34,32 +34,61 @@ class Authenticate
      * @param  string|null  $guard
      * @return mixed
      */
+    // public function handle($request, Closure $next, $guard = null)
+    // {
+    //     if ($this->auth->guard($guard)->guest()) {
+    //         if ($request->has('password')) {
+    //             $token = $request->header('Authorization');
+    
+    //             if ($token) {
+    //                 $check_token = DB::connection('mysql')->table('users')->where('password', $token)->first();
+    
+    //                 if ($check_token == null) {
+    //                     $res['success'] = false;
+    //                     $res['message'] = 'Permission Not Allowed';
+    
+    //                     return response()->json($res, 403); 
+    //                 } else {
+    //                     $res['success'] = false;
+    //                     $res['message'] = 'Not Authorized';
+    
+    //                     return response()->json($res, 401); 
+    //                 }
+    //             }
+    //         }
+    
+    //         return response('Unauthorized.', 401); 
+    //     }
+    
+    //     return $next($request);
+    // }
     public function handle($request, Closure $next, $guard = null)
     {
         if ($this->auth->guard($guard)->guest()) {
-            if ($request->has('password')) {
-                $token = $request->header('Authorization');
-    
+            if($request->header('token')) {
+                $token = $request->header('token');
                 if ($token) {
-                    $check_token = DB::connection('mysql')->table('users')->where('password', $token)->first();
-    
-                    if ($check_token == null) {
+                    $check_token = DB::connection('mysql')
+                        ->table('users')
+                        ->where('password', $token)
+                        ->first();
+                        // echo($check_token);
+
+                    if ($check_token === null) {
                         $res['success'] = false;
                         $res['message'] = 'Permission Not Allowed';
-    
-                        return response()->json($res, 403); 
-                    } else {
-                        $res['success'] = false;
-                        $res['message'] = 'Not Authorized';
-    
-                        return response()->json($res, 401); 
+                        return response()->json($res, 403);
                     }
+                } else {
+                    $res['success'] = false;
+                    $res['message'] = 'Not Authorized';
+                    return response()->json($res, 401);
                 }
+            } else {
+                return response($request->header('token'), 401);
             }
-    
-            return response('Unauthorized.', 401); 
         }
-    
+
         return $next($request);
     }
 }

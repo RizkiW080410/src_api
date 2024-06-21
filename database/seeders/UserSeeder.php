@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         $timstamp = \Carbon\Carbon::now()->toDateString();
         DB::table('users')->insert([
             'username' => 'client',
-            'password' => 'cient',
+            'password' => 'password',
             'created_at' => $timstamp,
             'updated_at' => $timstamp,]);
     }
