@@ -36,3 +36,11 @@ $router->group(['prefix' => 'api/v1/product','middleware' => 'auth'], function()
     $router->delete('/{id}', ['uses' => 'ProductController@destroy']);
     $router->put('/{id}', ['uses' => 'ProductController@update']);
 });
+
+$router->group(['prefix' => 'api/v1/transaction','middleware' => 'auth'], function() use ($router){
+    $router->get('/', ['uses' => 'TransactionController@index']);
+    $router->post('/add', ['uses' => 'TransactionController@store']);
+    $router->get('/{id}', ['uses' => 'TransactionController@show']);
+    $router->delete('/{id}', ['uses' => 'TransactionController@destroy']);
+    $router->put('/{id}', ['uses' => 'TransactionController@update']);
+});

@@ -39,11 +39,15 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'qty' => 'required|integer',
+            'price' => 'required|integer'
         ]);
 
         $dataproduct = [
             'name' => $request['name'],
+            'qty' => $request['qty'],
+            'price' => $request['price'],
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ];
@@ -102,7 +106,9 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required|string'
+            'name' => 'required|string',
+            'qty' => 'required|integer',
+            'price' => 'required|integer'
         ]);
 
         $product = DB::connection('mysql')->table('products')->where('id', $id)->first();
@@ -116,6 +122,8 @@ class ProductController extends Controller
         } else {
             $dataproduct = [
                 'name' => $request->input(['name']),
+                'qty' => $request->input(['qty']),
+                'price' => $request->input(['price']),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ];

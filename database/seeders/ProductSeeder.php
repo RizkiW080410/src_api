@@ -16,6 +16,8 @@ class ProductSeeder extends Seeder
         $timstamp = \Carbon\Carbon::now()->toDateString();
         DB::table('products')->insert([
             'name' => 'sepatu',
+            'qty' => 10,
+            'price' => 10000,
             'created_at' => $timstamp,
             'updated_at' => $timstamp,]);
     }
